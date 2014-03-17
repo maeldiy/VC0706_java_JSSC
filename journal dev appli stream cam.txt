@@ -1,0 +1,296 @@
+2013 12 07 :
+first commit : able to get version of cam within console
+
+2013 12 11 :
+able to get answer from camera in byte or String in main
+2013 12 12 :
+today version saved : slow picture download working !
+2013 12 13 :
+today version saved : working app for 1 shot at 115kbds
+able to handle starting the camera at 38 kbds or 115kbds and make multiple retries for good file lentgh reading
+minimum testing to ensure best latencies compromises to ensures minimum quality of data downloaded
+
+2013 12 14 :
+used turtle http server example : seems to be enough simple for me
+infinte loop on VC0706_stream doesn't work : best is 1 frame / 5.
+To be tested : implement DMA use : 2013 12 13 to be used
+
+2013 12 15 :
+evrlasting picture taking IS WORKING !!! saved under 2013 12 15 VC0706_java continous take.zip
+the issue was with the non re-initialisation of iostreams during connection/reconnection to camera
+no way to take everlsating picture without disconnection, this means 1 fps max ;-(
+using the TurtleMeatSimpleHttpServer modified server
+
+2013 12 16:
+a good track to implement simple jpg streaming : 
+implement a class from vc0706 and call its getbufferedoutputstream method, this has to be implemented of course
+then construct html page with enw data in bufferedinput stream
+
+2013 12 19:
+trying to stream the output file from VC0706 java program through a "simple" node.js http server : 
+http://nodejs.developpez.com/tutoriels/javascript/node-js-livre-debutant/
+struggling within the mod displaying an image
+exec method not tested yet, anyway VC0706 java program has to be modified to return the image
+
+2013 12 21:
+struggling with the output of vc0706 java app : need to output a correct streal within node app,
+ perhaps using those links :
+ http://www.avajava.com/tutorials/lessons/how-do-i-write-the-contents-of-a-file-to-standard-output.html
+ http://stackoverflow.com/questions/4405078/how-to-write-to-standard-output-using-bufferedwriter
+ http://brentscode.wordpress.com/2013/01/29/controlling-java-from-node-js-a-simple-json-based-rpc-protocol/
+ http://maxogden.com/node-streams.html
+ http://codewinds.com/blog/2013-08-19-nodejs-writable-streams.html
+ http://naholyr.fr/2013/01/stream/
+ 
+ 2013 12 22:
+ key is from jar program output : needed to use correctly system.out command
+ reached to have some data in test jpg node
+ 3 issues : image not correctly handled (need to parse somewhere), everything is trhown out system.out, auto refresh not working
+ 
+ 2013 12 23:
+  VC0706 java app cleaned up but no way to add start or end of data ... 
+  maybe using that ? https://github.com/Benvie/reified
+  key of the search for dtreaming :
+  a push server in node.js
+  3 links looks good :
+  http://blog.marcon.me/post/31143865164/send-images-through-websockets, see also comments
+  http://weblogs.asp.net/dwahlin/archive/2013/06/04/building-an-html5-web-sockets-server-with-node-js.aspx
+  http://stackoverflow.com/questions/4074569/need-simple-data-push-to-browser-using-node-js
+  http://www.gianlucaguarini.com/blog/nodejs-and-a-simple-push-notification-server/
+  http://tomkersten.com/articles/server-sent-events-with-node/
+  
+  
+ 2013 12 26:
+  node.io is definitively what I need, struggling to have a working example :
+  http://blog.nodeknockout.com/post/34243127010/knocking-out-socket-io
+  http://www.williammora.com/2013/03/nodejs-tutorial-building-chatroom-with.html
+  http://www.davidpirek.com/blog/loading-images-via-websockets-in-nodejs
+  http://isolasoftware.it/2012/04/23/beaglebone-and-websockets-a-full-example-that-turn-onoff-a-led/
+  
+    2013 12 27:
+    This one help me to implement the push 
+      http://blog.nodeknockout.com/post/34243127010/knocking-out-socket-io
+      difficulties to send properly the data and format it to jpg, the JAVA app should send it in base64 already :
+base 64 tutos :
+http://stackoverflow.com/questions/13109588/base64-encoding-in-java
+http://furie.be/news/22/15/Encoder-une-chaine-en-Base64-sous-Java.html
+http://www.wikihow.com/Encode-a-String-to-Base64-With-Java
+http://www.source-code.biz/base64coder/java/      
+      
+tip : run -g with npm install to install it GLOBALLY
+
+The following push example one need to be tested AS IS
+http://stackoverflow.com/questions/6208234/javascript-draw-image-into-html-from-buffer-nodejs-socket-io
+
+Then whe should need the help of : http://stackoverflow.com/questions/934012/get-image-data-in-javascript
+
+    2013 12 29:
+html tip to write an image :
+     res.writeHead(200, {'Content-Type': 'image/gif' });
+     res.end(img, 'binary');
+     
+Should try JSON with "ws" node module     https://github.com/einaros/ws
+and/or http://blog.marcon.me/post/31143865164/send-images-through-websockets
+
+    2013 12 31:
+    success in streaming data to browser using http://blog.marcon.me/post/31143865164/send-images-through-websockets
+need to : 
+proper cast data and customize web page    
+clean up jar to  : remove inconsistent stdout, output base 64 image
+
+inconstient stdout removed ("wait for byte error"), no need to remove RxTx version display because only at startup
+
+2014 01 01 (happy new year)
+generate a JAr providing base64 output using the following tip :
+http://myjeeva.com/how-to-convert-image-to-string-and-string-to-image-in-java.html
+
+no changes :-(
+
+2014 01 06:
+change again PC, reinstall node, eclipse and so on....
+try http://phoboslab.org/log/2013/09/html5-live-video-streaming-via-websockets, not suitable for me
+seems to be better insisting in modifying chat app
+
+explanation of the $ sign use, it's a "JQUERY shortcut"
+http://stackoverflow.com/questions/846585/can-someone-explain-the-dollar-sign-in-javascript
+http://stackoverflow.com/questions/205853/why-would-a-javascript-variable-start-with-a-dollar-sign
+
+should also try this one : https://github.com/binaryjs/binaryjs
+and maybe this : http://stackoverflow.com/questions/9540978/nodejs-how-to-read-and-output-jpg-image
+
+2014 01 07:
+reach to send the binary data trhough html page (using "test jpg 2" project)
+directly converted the binary data in base64 within node app
+need to go deeeper in this project
+
+2014 01 08 :
+using  https://github.com/whichlight/kinect-browser-stream, reach to stream data, still not the good format : 
+the canvas is resfreshed but inconsistent data
+
+2014 01 09:
+it looks that the message displayed in chrome console is the key
+"Resource interpreted as Script but transferred with MIME type text/plain: "http://localhost:3000/bundle.js".
+The socket.on console.log message whithin client.js is not displayed, but the console.log("connected") on the same file is displayed
+need to go deeper
+
+2014 01 10:
+after trying to write data in node, it seems that somethings wrong within the JAR
+maybe the JAR has to print out an output stream
+
+2014 01 11:
+the output stream was the key : node is now able to save a jpg file which looks as a jpg
+nut the image is not fully good
+
+2014 01 13 : 
+could be util for java stdio :
+http://www.coderanch.com/t/458822//java/pipe-data-stdout-windows
+
+struggling to understand why node interpret "?" as "." and few other characters
+stdout from jar verified inconsole and identical to the one seen with debugger in Eclipse
+
+2014 01 14 :
+stdout data forced to binary within node.js, jar file already set to binary
+to test 
+
+2014 01 15 :
+by logging into console stdout type : it looks like "undefined"
+default looks to be utf8, should do it ? 
+
+2014 01 16 :
+
+stabilised nod app within "kinect" project with vc0706.jar. The jar file has a binary output and write the jpg file to the working dir
+
+2014 01 30 :
+modified vc0706 to get the port number as a parameter, not working yet
+
+2014 01 31:
+
+VC0706 vorking with one arg as port name, if no port default is COM3. 
+Uploaded to github with VC0706_20143101.jar as exported jar file
+now ready to test on beagleboneblack target ?
+
+2014 02 01:
+update vc0706 app with secondary arg, if second arg is "save", it will only save to disk
+expoted jar as VC0706_20140201.jar, updated github
+
+2014 02 09 :
+Jar file not executing when downloadnig from github ; to follow up and fix
+
+2014 02 10:
+probably due to 2 usb / serial device connected, solved
+no i have the message "linux no rxtxserial in java.library.path"
+need to add rxtx in jre path  (from the web):
+"
+To fix this problem, I added the line
+Code:
+-Djava.library.path="/usr/lib/jni/"
+to the VM Options. (Right click project -> Properties -> Run). 
+"
+
+2014 02 12:
+fixed rxtx issue by adding rxtx file in  /usr/java/ejre*/lib/arm
+no having a version mismatch issue
+updated rxtx jar with 2.2pre version (latest) to avoid warning message
+still having the warning for 2.2pre1 instead of pre2 => don't care at the moment
+
+problem for accessing serial ports : /dev/ttyS1 or whatever
+need to write to stdout the oupout of listport method => to be added as a parameter
+
+2014 02 14:
+modified the jar file to set 2.2pre2 version : no more warning....
+cretaed a jar file "get_rxtx_port_ID" which provide:
+ _ a text  output to be sure that is working 
+ _ the list of serial and parallel ports
+at the writing time : no port on BBB :-(
+
+manage to get the following answer :
+ ls /dev/ttyO*
+/dev/ttyO0  /dev/ttyO2
+after adding  echo ttyO2_armhf.com > /sys/devices/bone_capemgr*/slots (from a comment in following blog 
+:http://www.armhf.com/index.php/beaglebone-black-serial-uart-device-tree-overlays-for-ubuntu-and-debian-wheezy-tty01-tty02-tty04-tty05-dtbo-files)
+
+but java -jar get_rxtx_port_ID.jar still get no port
+
+is this because ttyO2 and not ttyS2 ?
+or is this because not the good file proprties (should use chmod ?)
+
+2014 02 17:
+stty -F /dev/ttyS? gave an I/O error result for 0 to 3, while an "no such..." for 4 : done without anything connect nor declared after boot
+
+2014 02 18:
+need to try using the following
+http://thethingsystem.com/dev/Bootstrapping-the-BeagleBone-Black.html
+https://groups.google.com/forum/#!topic/beagleboard/-kHyFqZwEF4
+
+eventually
+http://papermint-designs.com/community/node/331
+
+perharps the uart is working but my java app isn't ?? ;-(
+
+
+2014 02 19:
+it seems that rxtx lib need some customisation : see there :
+http://beaglebone.cameon.net/home/doing-java-development
+The built-in serial ports on the BeagleBone isn't autmatically detected by RxTx. To add them to the list of available ports, set the "gnu.io.rxtx.SerialPorts" property to a colon-separated list of port names. You can do that in a property file, or directly on the command line:
+
+java -Dgnu.io.rxtx.SerialPorts=/dev/ttyO0:/dev/ttyO1:/dev/ttyO2:/dev/ttyO3:/dev/ttyO4:/dev/ttyO5 -Djava.library.path=/usr/lib/jni/ -cp .:/usr/share/java/rxtx.jar CommTest
+or there :
+http://fortytwoandnow.blogspot.ch/2012/10/beaglebone-serial-ports-and-multiplexing.html
+
+or even there:
+http://embeddedgeeks.wordpress.com/2012/02/26/arduino-beagleboard-serial-communication-using-java-rxtx/
+
+to be tested !
+
+2014 02 20:
+rxtx needs effectivelly some declaration :
+actually works like this (got from http://beaglebone.cameon.net/home/doing-java-development)
+java -Dgnu.io.rxtx.SerialPorts=/dev/ttyO0:/dev/ttyO1:/dev/ttyO2:/dev/ttyO3:/dev/ttyO4:/dev/ttyO5 -Djava.library.path=/usr/lib/jni/ -jar /usr/etc/portail_app/get_rxtx_port_ID.jar
+ but the launch of VC0706 doesn't get output
+
+
+2014 02 23:
+got the jar file working on BBB, but unable to get any readable data. Maybe it is because of the 38400bds defaults setting
+to try	
+
+2014 03 04:
+got the debug jar version "working" : no real data buffer size locked to 20,40 or 50 bytes
+
+2014 03 05:
+there is clearly a link to the buffer size and the issue
+20,40 and 50 are some constants which I have set for the data return length, but some are 100 and never called ;-(
+
+2014 03 06 :
+seems to be linked to rxtx usage and portablility issues, move VC0706_java app to VC0706_JAVA_jSSC
+try to avoid rewriting all code, main issues : I/O stream, may be event listener 
+
+2014 03 07 :
+it looks like the communicator object is no more required, rewriting a lot ;-(
+
+2014 03 08 :
+rewriting "done" : no errors, looks to have a good output, need to check image validity
+after deep check : errors in frame lentgh, now no more working after trying to fix ;-(
+
+2014 03 09 :
+frame lentgh problem fixed, removed "buffersize" variable except on read image function because originally used to set wait time value
+next issue : only the 3 frames are refreshed, after the camera doesn't refresh the buffer
+may be caused by the "nextbuf " command
+
+2014 03 12 : 
+Still not working, Compression settings doesn't work, sending read data seems to doen't work also
+but get version and  get compression methods work....
+
+2014 03 13 : 
+Found the issue while reading data, not for the compression setting
+Anyway, efficient reading cannot append without event listener...
+compression remain mandatory as the buffer of VC0706 is limited to 8k, this mean that default compression provide 12k
+picture, thus buffer image cannot be read in 1 shot
+
+2014 03 16 :
+ Fixed compression setting issue : just syntax problem
+ fixed null pointer issue in cameraFrameBuffCtrl function, the sleep time was too low
+ now working
+ 
+ 2014 03 17 :
+ JSSCV on the beagle seem to be very slow
+ will use eclipse remotely on the beagle to try to troobleshoot, might already switch to event listener instead of reading the buffer ???
