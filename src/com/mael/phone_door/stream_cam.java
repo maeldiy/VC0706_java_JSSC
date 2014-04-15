@@ -6,6 +6,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.PrintStream;
 import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
 import java.util.concurrent.TimeUnit;
@@ -47,14 +49,14 @@ public static void main(String args[]) {
 	}
 	
     if (camera.isOpened() == true) { 
-    	System.out.println("init io 115200");
-        System.out.println("listening ");
+  //  	System.out.println("init io 115200");
+   //     System.out.println("listening ");
     }
     else {System.out.println("port not available");}
   //  reset();// to put when app is killed
     sleep(50); // 20 on a PC
     boolean conn_115200 = getVersion(camera);  
-    System.out.println("get version at 115200 bds result " + conn_115200 );
+ //   System.out.println("get version at 115200 bds result " + conn_115200 );
              
     if (!conn_115200) {
     	try {
@@ -72,11 +74,11 @@ public static void main(String args[]) {
 	}
      
   	
-  	System.out.println("connected @38400" + camera.isOpened());
+  	//System.out.println("connected @38400" + camera.isOpened());
         if (camera.isOpened() == true)
-        { System.out.println("connected @ 38400");
+        {// System.out.println("connected @ 38400");
          // 	  camera.initListener();
-          	  System.out.println("listening but listener disabled ;-)");
+          //	  System.out.println("listening but listener disabled ;-)");
             }
        
       sleep(50); // 20 on a PC
@@ -84,7 +86,7 @@ public static void main(String args[]) {
       sleep(20);  // 10 on a PC
       
       ChangeBaudRate(camera, 115200);
-    	  System.out.println("Changed BaudRate " );
+   // 	  System.out.println("Changed BaudRate " );
     	  sleep(15); // 5 on a PC
     	  try {
 			camera.closePort(); 
@@ -97,15 +99,15 @@ public static void main(String args[]) {
 		}
       sleep(40); // 20 on a PC
     
-//  	System.out.println("connected" + camera.getConnected());
+/*  	System.out.println("connected" + camera.getConnected());
         if (camera.isOpened() == true)
-        { System.out.println("connected @115200");
+        {// System.out.println("connected @115200");
            // System.out.println("init io");
   //        	  camera.initListener();
           	  System.out.println("listening @155200 but listener disabled ;-)");
             
         }
-        conn_115200 = getVersion(camera);
+   */     conn_115200 = getVersion(camera);
  //       camera.sleep(1);
  //       System.out.println("get version at 115200 bds result " + conn_115200 );
       } 
@@ -123,21 +125,22 @@ public static void main(String args[]) {
     
  TVoff(camera);
  sleep(30); // 10 on a PC
- boolean comp = setCompression(camera, (byte) 99); // quite high but in line with my requirements, may be to put as an arg ?
- System.out.println("compression " + comp);
+ boolean comp = setCompression(camera, (byte) 0xCA); // quite high but in line with my requirements, may be to put as an arg ?
+ //System.out.println("compression " + comp);
  sleep(30); // 10 on a PC
  int b = getCompression(camera);
- System.out.println("camera compression " + b);
+// System.out.println("camera compression " + b);
  sleep(10); // 1 on a PC
- System.out.println("sending resume video command from init");
+// System.out.println("sending resume video command from init");
  resumeVideo(camera); 
  ByteArrayOutputStream bos = new ByteArrayOutputStream(); 
+ PrintStream[] outs;
  
 /***********  END of settings phase ************/   
   
   /*****************  Branching with args(1) : if no args only stdout, if args="save" : save to disk only (.\\) ***********/     
   if (args.length > 1 ) {
-	   System.out.println("saving IMAGE to disk @ local dir");
+//	   System.out.println("saving IMAGE to disk @ local dir");
 	   int nb_image = 1;
 	   byte[] a = new byte[0];
 	   while (nb_image >0){
@@ -149,7 +152,7 @@ public static void main(String args[]) {
 	  		   fileOuputStream = new FileOutputStream("IMAGE.jpg");  
 	  		   fileOuputStream.write(a);
 	  		   fileOuputStream.close();
-	  		   System.out.println("written IMAGE.jpg to local active dir"); 
+//	  		   System.out.println("written IMAGE.jpg to local active dir"); 
 		} catch (Exception e) {
 				e.printStackTrace();
 		  }				
@@ -166,14 +169,14 @@ public static void main(String args[]) {
 			{//  System.out.println("connected");
         }
    }
-  sleep(30); // 10 on a PC
+  sleep(15); // 10 on a PC
   conn_115200 = getVersion(camera);  
-  sleep(30);  // 10 on a PC 
+  sleep(15);  // 10 on a PC 
   }
      
 /******  STDOUT byte output only  *************/
 	   else {   
-		   System.out.println("STDOUT ONLY");
+//		   System.out.println("STDOUT ONLY");
    	   int nb_image = 1;
    	   byte[] a = new byte[0];
    	   while (nb_image >0){
@@ -181,17 +184,23 @@ public static void main(String args[]) {
  			bos.reset();
  			a = Capture(camera);
 // 			a = CaptureBase64(); // uncomment to set base 64 output		
-			bos.write(a, 0, a.length);    	// write bytes to bos ...
+/*			bos.write(a, 0, a.length);    	// write bytes to bos ...
 			System.out.print(bos);
 			System.out.flush();		
+			*/
+ 			try {
+				System.out.write(a);
+			} catch (IOException e1) {
+				System.out.println("problem on serial port : "+ e1);
+			}
 
          try {
 			camera.closePort();
 			sleep(300); // not changed because the sleep is due to the camera not the beaglebone
 			camera.openPort();
 		} catch (SerialPortException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			
+			System.out.println("problem on serial port : "+ e);
 		}
 //    		System.out.println("connected" + camera.getConnected());
      		if (camera.isOpened() == true)
@@ -200,9 +209,9 @@ public static void main(String args[]) {
            }
        }
    
-   	  sleep(30); // 10 on a PC
+   	  sleep(15); // 10 on a PC
       conn_115200 = getVersion(camera);  
-      sleep(30); // 10 on a PC  
+      sleep(15); // 10 on a PC  
 	   }
 	 }
 	 
@@ -227,7 +236,7 @@ static void captureAndSave(SerialPort camera, int numimage) {
      	} while (jpglen > 20000);
       	
 //  		System.out.println("Picture taken!");
-//  		System.out.println("jpglen  " + jpglen); 
+ 		System.out.println("jpglen  " + jpglen); 
         byte[] bufferfile = {(byte) 0x00};// 
 
         bufferfile = readImageData(camera, jpglen); //never reach above, thus it is a compromise 
@@ -269,12 +278,12 @@ static byte[]  Capture(SerialPort camera) {
 			//System.out.println("resuming "+ resume);
   
 			takePicture(camera);
-			sleep(15); // 2 on a PC
+			sleep(4); // 2 on a PC
 			jpglen = frameLength(camera);
     	} while (jpglen > 20000);
 
         byte[] bufferfile = {(byte) 0x00};// 
-
+ //       System.out.println("image length " + jpglen);
         bufferfile = readImageData(camera, jpglen); //never reach above, thus it is a compromise 
         return bufferfile;
      
@@ -361,7 +370,7 @@ static boolean ChangeBaudRate(SerialPort camera, int baudrate) {
   	  while (!result) {
   			  try {
 				answer = camera.readBytes();
-				System.out.println("change aud rate result = : " + answer);
+//				System.out.println("change aud rate result = : " + answer);
 			} catch (SerialPortException e) {
 				
 				e.printStackTrace();
@@ -394,7 +403,7 @@ static int frameLength(SerialPort camera) {
  byte[] args = new byte[]{(byte) 0x01,(byte) 0x00};
  runCommand(camera, VC0706_GET_FBUF_LEN, args);
  int len, offset = 0;
- sleep(100);  // 40 on a PC
+ sleep(70);  // 40 on a PC
  byte[] answer = null; 
  boolean result = false; 
 	  while (!result) {
@@ -460,7 +469,7 @@ static boolean cameraFrameBuffCtrl(SerialPort camera, byte command) {
  	  while (!result) {
  		  try {
  			  runCommand(camera, VC0706_FBUF_CTRL, args);
- 			  sleep(50);  // 15 on a PC // lower values involves crash when long time image loading, can go below for a few image
+ 			  sleep(20);  // 15 on a PC // lower values involves crash when long time image loading, can go below for a few image
 			  answer = camera.readBytes();
 		} catch (SerialPortException e) {
 			System.out.println("error : " + e);
@@ -483,13 +492,13 @@ static boolean cameraFrameBuffCtrl(SerialPort camera, byte command) {
 	static boolean getVersion(SerialPort camera){
 		byte[] args = new byte[] { (byte) 0x01,  (byte) 0x56,  (byte) 0x57 };  
 		runCommand(camera, VC0706_GEN_VERSION, args);
-		sleep(50);  // 10 on a PC // let the cam answer
+		sleep(30);  // 10 on a PC // let the cam answer
 		boolean result = false;		
 		try {	
 			String answerq = camera.readString() ;
 			if (answerq != null) 
 			if (answerq.contains("VC0703")) { result = true;}
-			System.out.println("GetVersion result : " + answerq);//.toString());
+//			System.out.println("GetVersion result : " + answerq);//.toString());
 		} catch (SerialPortException e) {
 			System.out.println("GetVersion error : " + e);
 		
@@ -553,7 +562,7 @@ static boolean cameraFrameBuffCtrl(SerialPort camera, byte command) {
 	static int getCompression(SerialPort camera) {
 		 byte[] args = {(byte)0x4, (byte) 0x1, (byte) 0x1, (byte) 0x12, (byte) 0x04};
 	  runCommand(camera, VC0706_READ_DATA, args);
-	  sleep(40);  // 10 on a PC 
+	  sleep(25);  // 10 on a PC 
 	  byte[] answer = null;
 	try {
 		answer = camera.readBytes();
@@ -603,8 +612,8 @@ static boolean cameraFrameBuffCtrl(SerialPort camera, byte command) {
 		case 2048 : arg_buffer1=(byte) 0x08; arg_buffer2 = (byte) 0x00; sleeptime = 200; break;
 		case 4096 : arg_buffer1=(byte) 0x10; arg_buffer2 = (byte) 0x00; sleeptime = 390; break;
 		case 8192 : arg_buffer1=(byte) 0x20; arg_buffer2 = (byte) 0x00; sleeptime = 480; break;
-		case 12288 : arg_buffer1=(byte) 0x20; arg_buffer2 = (byte) 0x00; sleeptime = 580; break;
-		case 16384 : arg_buffer1=(byte) 0x30; arg_buffer2 = (byte) 0x00; sleeptime = 700; break;
+		case 12288 : arg_buffer1=(byte) 0x21; arg_buffer2 = (byte) 0x40; sleeptime = 580; break;
+		case 16384 : arg_buffer1=(byte) 0x30; arg_buffer2 = (byte) 0x80; sleeptime = 700; break;
 		}
 	/* best result seen
 	case 32  : sleeptime = 20@38400 (10,3 s/12k) 12@115200 (2,9 s/5k)
@@ -626,7 +635,7 @@ static boolean cameraFrameBuffCtrl(SerialPort camera, byte command) {
 		runCommand(camera, VC0706_READ_FBUF, args); //data often starts at adress != 0
 
 	//	  System.out.println("frameptr = : " + frameptr);
-		sleep((long) (sleeptime *1.5)); //1.5 because of beaglebone, remove it on a pc // let the cam answer
+		sleep((long) (sleeptime *2)); //1.5 because of beaglebone, remove it on a pc // let the cam answer
 		boolean result = false; 
 		byte[] answer = null;
 		@SuppressWarnings("unused")

@@ -294,3 +294,22 @@ picture, thus buffer image cannot be read in 1 shot
  2014 03 17 :
  JSSCV on the beagle seem to be very slow
  will use eclipse remotely on the beagle to try to troobleshoot, might already switch to event listener instead of reading the buffer ???
+
+ 2014 03 30:
+ VCP706 app is working, what ever with RXTX or JSSC, the problem was that GND wasn't common between BBB and the camera
+ now main problem : buffer limited : cannot take pictures larger than 4k. Don't care at the moment, jumping to node / asterisk app
+ 
+ 2014 07 04
+ a essayer :
+ http://java.mesexemples.com/specifite-jdk6/creer-un-serveur-http-simple-en-java/#
+ 
+ besoin de savoir caster correctement les streams sortant de VC0706 dans le pipe
+ 
+  2014 12 04
+  after looking around for serveral solutions, it seems that a node.js (nearly) already working server
+  which would be connected to a named pipe (mkfifo) would be nice
+ 
+   2014 14 04
+ finaly, the binary output wasn't clean, replaced system.out.write(byteoutputstream) by system.out.write(byte[]);
+ now working beacause when running java -jar jvodjvo >out.jpg, file is now correct
+ output file from node is also correct, now need to make the correct pipe
